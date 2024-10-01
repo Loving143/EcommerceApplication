@@ -24,7 +24,7 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
-      name:[null, [Validators.required]],
+      username:[null, [Validators.required]],
       email:[null,[Validators.email,Validators.required]],
       password:[null, [Validators.required]],
       confirmPassword : [null, [Validators.required]]
@@ -41,13 +41,15 @@ export class SignupComponent implements OnInit {
     const confirmPassword = this.signupForm.get('confirmPassword')?.value;
     if(password != confirmPassword){
       this.snackbar.open('Passwords do not match.','Close',{duration:5000 , panelClass:'error-snackbar'});
+      return;
     }
     this.authService.register(this.signupForm.value).subscribe(
       (response)=>{
-        this.snackbar.open('Signup successful','Close',{duration:5000,panelClass:'error-snackbar'});
+        this.snackbar.open('Signup successful','Close',{duration:5000,panelClass:'success-snackbar'});
         this.router.navigateByUrl("/login");
       },
       (error)=>{
+        console.log("This is ",error)
         this.snackbar.open('Signup failed.Please try again.','Close',{duration:5000,panelClass:'error-snackbar'});
       }
     )

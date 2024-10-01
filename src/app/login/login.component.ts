@@ -23,8 +23,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email : [null, [Validators.required]],
-      password : [null, [Validators.required]]
+      username : [null, [Validators.required]],
+      password : [null, [Validators.required]],
+      email : [null, [Validators.required, Validators.email]]
     })
   }
 
@@ -33,15 +34,18 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit():void {
-    const userName = this.loginForm.get('email')!.value;
+    const username = this.loginForm.get('username')!.value;
     const password = this.loginForm.get('password')!.value;
+    const email = this.loginForm.get('email')!.value;
 
-    this.authService.login(userName, password).subscribe(
+    this.authService.login(username, password,email).subscribe(
       (res)=>{
-        this.snackbar.open('Login Success','OK', {duration:5000})
+        this.snackbar.open('OTP Sent successfully','OK', {duration:5000});
+        this.router.navigateByUrl("/otp")
       },
       (error) =>{
-        this.snackbar.open('Bad Credentials', 'Error', {duration : 5000})
+        console.log("This us ",error)
+        this.snackbar.open('Unable to send OTP .Please check the credentials', 'Error', {duration : 5000})
       }
     )
   }
