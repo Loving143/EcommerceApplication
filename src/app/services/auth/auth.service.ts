@@ -3,6 +3,30 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { UserStorageService } from '../UserStorage/user-storage.service';
 
+export interface LoginResponse{
+  token : string ,
+  user : USER,
+  // email : string,
+  // otpVerified : boolean,
+  // id : number
+  // roles : string[];
+}
+
+export interface USER{
+id : number,
+username : string;
+email:string;
+otpVerified :boolean;
+roles : Role[];
+}
+
+export interface Role{
+  id : number;
+  name : string;
+}
+
+
+
 const BASIC_URL ="http://localhost:8080/";
 @Injectable({
   providedIn: 'root'
@@ -32,9 +56,9 @@ export class AuthService {
     )
   }
 
-  verifyOtp(username:string,otp:string):any{
+  verifyOtp(username:string,otp:string):Observable<LoginResponse>{
     const body = {username , otp};
-    return this.http.post(BASIC_URL+'api/auth/verify-otp',body,{responseType:'text'})
+    return this.http.post<LoginResponse>(BASIC_URL+'api/auth/verify-otp',body)
   }
 
   //set token in the local storage 
@@ -53,19 +77,7 @@ export class AuthService {
     return true;
   }
 
-  public logout(){
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    return true;
-  }
-
-  public getToken(){
-    localStorage.getItem('token');
-  }
-
-  public SetUser(user){
-    localStorage.setItem('user',JSON.stringify(user));
-  }
+ 
 
 
 }
